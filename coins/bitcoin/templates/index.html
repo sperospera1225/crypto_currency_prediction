@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <!--    highchart-->
+    <script src="https://code.highcharts.com/modules/boost.js"></script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Bitcoin</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link
+            href=" {% static 'https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i' %}"
+            rel="stylesheet">
+    <!-- Custom styles for this template-->
+    <link href=" {% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0">
+        <!-- Nav Item - Dashboard -->
+        <li class="nav-item active">
+            <a class="nav-link" href="index.html">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>Bitcoin</span></a>
+        </li>
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Interface
+        </div>
+        <li class="nav-item">
+            <a href="{% url 'bitcoin' %}" class="nav-link collapsed">
+                <span>Bitcoin</span>
+            </a>
+        </li>
+        <!-- Nav Item - Utilities Collapse Menu -->
+        <li class="nav-item">
+            <a href="{% url 'ethereum' %}" class="nav-link">
+                <span>Ethereum</span>
+            </a>
+        </li>
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+    </ul>
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+        <div id="content">
+            <!-- Topbar -->
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow"></nav>
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+                <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Bitcoin</h1>
+                </div>
+                <!-- Content Row -->
+                <div class="row">
+                    <!-- Area Chart -->
+                    <div class="col-xl-8 col-lg-7">
+                        <div class="card shadow mb-4">
+                            <!-- Card Header - Dropdown -->
+                            <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">Bitcoin</h6>
+                            </div>
+                            <div style="width: 800px" id="bitcoin"></div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="chartContiner" style="height: 400px; width: 800px">
+                    <canvas id="myChart"></canvas>
+                </div>
+                <div style="width:800px" id="container"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+<div id="test">before</div>
+
+<!-- Bootstrap core JavaScript-->
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+<script src="{% static 'js/graph.js' %}"></script>
+<script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- Core plugin JavaScript-->
+<script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+<!-- Custom scripts for all pages-->
+<script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+<!-- Page level custom scripts -->
+<script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
+<script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2/dist/chart.min.js"></script>
+<script>
+    function draw3(){
+        let ctx = document.getElementById('myChart');
+        let chartdata = [];
+        let sentimentCount=[];
+        temp1=[]
+        temp2=[]
+        {% for cur in result %}
+        temp1.push({{cur}});
+        {% endfor %}
+        {% for cur in date %}
+        temp2.push({{cur}});
+        {% endfor %}
+
+        for(let i=0; i<temp2.length; i++){
+            if((new Date(temp2[i]*1000).getHours()==0)){
+                temp2[i]=String((new Date(temp2[i]*1000).getDate()));
+                temp2[i]+=".Jun";
+
+            }else{
+                temp2[i]=(new Date(temp2[i]*1000).getHours());
+            }
+        }
+        for(let i=0; i<temp2.length; i++){
+            sentimentCount.push([temp2[i]*1000, temp1[i]])
+        }
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: temp2,
+
+                datasets: [{
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgb(75, 192, 192)',
+                    label: 'Positive tweets',
+                    data: temp1,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                ticks: {
+                    callback: function(value) {
+                        return new Date(value).toLocaleDateString('de-DE', {month:'short', year:'numeric'});
+                    },
+                },
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'hour',
+                        }
+                    }
+                },
+                maintainAspectRatio: true, // default value. false일 경우 포함된 div의 크기에 맞춰서 그려짐.
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            autoSkip: true,
+                            maxTicksLimit:5,
+                        }
+                    }]
+                }
+            }
+        });
+
+        $.getJSON('https://poloniex.com/public?command=returnChartData&currencyPair=USDT_BTC&start=1623533200&end=9999999999&period=900', function (data) {
+            $.each(data, function(i, item){
+                chartdata.push([item.date*1000, item.open, item.high, item.low, item.close]);
+            });
+        }).done(function(){
+            Highcharts.stockChart('bitcoin',{
+                title: {
+                    text: 'USDT_BTC'
+                },
+                yAxis: [{ // Primary yAxis
+                    labels: {
+                        style: {
+                            color: Highcharts.getOptions().colors[1]
+                        }
+                    },
+                    title: {
+                        text: 'Bitcoin',
+                        style: {
+                            color: Highcharts.getOptions().colors[1]
+                        }
+                    }
+                }, {
+                }],
+                legend: {
+                    layout: 'vertical',
+                    align: 'left',
+                    floating: true,
+                    backgroundColor:
+                        Highcharts.defaultOptions.legend.backgroundColor || // theme
+                        'rgba(255,255,255,0.25)'
+                },
+
+                plotOptions: {
+                    candlestick: {
+                        downColor: 'blue',
+                        upColor: 'red'
+                    }
+                },
+                series: [{
+                    name: 'BTC',
+                    yAxis: 1,
+                    type: 'candlestick',
+                    data: chartdata,
+                }]
+            });
+        });
+    }
+    draw3();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+</body>
+
+</html>
