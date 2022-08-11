@@ -69,8 +69,8 @@ if __name__ == "__main__":
     spark = SparkSession \
             .builder \
             .appName("TwitterStreamingAPI") \
-            .config("spark.mongodb.input.uri","mongodb://117.17.189.6:27017/tweet.kafka_tweet")\
-            .config("spark.mongodb.output.uri","mongodb://117.17.189.6:27017/tweet.kafka_tweet")\
+            .config("spark.mongodb.input.uri","mongodb://127.0. 0.1:27017/tweet.kafka_tweet")\
+            .config("spark.mongodb.output.uri","mongodb://127.0. 0.1:27017/tweet.kafka_tweet")\
             .getOrCreate()
             #.config("spark.jars", "/root/spark/jars/spark-sql-kafka-0-10_2.11-2.3.0.jar,/root/kafka/libs/kafka-clients-2.2.2.jar") \
             #.config("spark.executor.extraClassPath", "/root/spark/jars/spark-sql-kafka-0-10_2.11-2.3.0.jar,/root/kafka/libs/kafka-clients-2.2.2.jar") \
