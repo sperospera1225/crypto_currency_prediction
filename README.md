@@ -1,4 +1,4 @@
-# Crypto_currency
+# Crypto_Currency
 
 
 ## 1. 프로젝트 소개
